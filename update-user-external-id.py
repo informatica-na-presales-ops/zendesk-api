@@ -38,7 +38,7 @@ def get_external_ids(settings: Settings):
     result = {}
     with settings.external_id_file.open(newline='') as f:
         for line in csv.DictReader(f):
-            result[line.get('email').lower()] = line.get('employee_id')
+            result[line.get('email').lower()] = line.get('external_id')
     return result
 
 
@@ -54,6 +54,9 @@ def main():
     z = zendesk.ZendeskClient(settings.zendesk_company, settings.zendesk_username, settings.zendesk_password)
 
     for user in z.users:
+        if user.suspended:
+            log.info(f'{user.id} ({user.name}) is suspended')
+            continue
         if user.external_id is None:
             if user.email in external_ids:
                 external_id = external_ids.get(user.email)
