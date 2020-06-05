@@ -93,6 +93,10 @@ class ZendeskUser(ZendeskApiObject):
     def name(self) -> str:
         return self.get('name')
 
+    @property
+    def suspended(self) -> bool:
+        return self.get('suspended')
+
 
 class ZendeskUserIdentity(ZendeskApiObject):
     @property
