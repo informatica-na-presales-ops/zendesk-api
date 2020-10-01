@@ -41,6 +41,21 @@ class ZendeskClient:
         data = self._get(_url, params)
         return data
 
+    @property
+    def tickets(self):
+        _url = f'{self.base_url}/tickets.json'
+        while _url is not None:
+            data = self._get(_url)
+            _url = data.get('next_page')
+            _tickets = data.get('tickets')
+            yield from [ZendeskTicket(self, i) for i in _tickets]
+
+    def update_ticket(self, ticket_id: int, params: Dict):
+        _url = f'{self.base_url}/tickets/{ticket_id}.json'
+        json = {'ticket': params}
+        data = self._put(_url, json)
+        return data
+
     def update_user(self, user_id: int, params: Dict):
         _url = f'{self.base_url}/users/{user_id}.json'
         json = {'user': params}
@@ -61,6 +76,22 @@ class ZendeskApiObject(dict):
     def __init__(self, client: ZendeskClient, *args, **kwargs):
         self.client = client
         super().__init__(*args, **kwargs)
+
+
+class ZendeskTicket(ZendeskApiObject):
+    @property
+    def external_id(self) -> str:
+        return self.get('external_id')
+
+    @external_id.setter
+    def external_id(self, value: str):
+        params = dict(external_id=value)
+        self.update(params)
+        self.client.update_ticket(self.id, params)
+
+    @property
+    def id(self):
+        return self.get('id')
 
 
 class ZendeskUser(ZendeskApiObject):
