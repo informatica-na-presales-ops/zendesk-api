@@ -27,6 +27,14 @@ class ZendeskClient:
         response.raise_for_status()
         return response.json()
 
+    def get_ticket_field_options(self, field_id: int):
+        _url = f'{self.base_url}/ticket_fields/{field_id}/options.json'
+        while _url is not None:
+            data = self._get(_url)
+            _url = data.get('next_page')
+            _options = data.get('custom_field_options', [])
+            yield from [ZendeskCustomFieldOption(self, o) for o in _options]
+
     def list_user_identities(self, user_id: int):
         _url = f'{self.base_url}/users/{user_id}/identities.json'
         while _url is not None:
@@ -40,6 +48,13 @@ class ZendeskClient:
         params = {'query': query}
         data = self._get(_url, params)
         return data
+
+    @property
+    def ticket_fields(self):
+        _url = f'{self.base_url}/ticket_fields.json'
+        data = self._get(_url)
+        _ticket_fields = data.get('ticket_fields', [])
+        yield from [ZendeskTicketField(self, f) for f in _ticket_fields]
 
     @property
     def tickets(self):
@@ -77,6 +92,10 @@ class ZendeskApiObject(dict):
         self.client = client
         super().__init__(*args, **kwargs)
 
+    @property
+    def id(self) -> int:
+        return self.get('id')
+
 
 class ZendeskTicket(ZendeskApiObject):
     @property
@@ -89,9 +108,33 @@ class ZendeskTicket(ZendeskApiObject):
         self.update(params)
         self.client.update_ticket(self.id, params)
 
+
+class ZendeskCustomField(ZendeskApiObject):
+    pass
+
+
+class ZendeskCustomFieldOption(ZendeskApiObject):
     @property
-    def id(self):
-        return self.get('id')
+    def name(self) -> str:
+        return self.get('name')
+
+    @property
+    def value(self) -> str:
+        return self.get('value')
+
+
+class ZendeskTicketField(ZendeskCustomField):
+    @property
+    def options(self) -> List[ZendeskCustomFieldOption]:
+        return [ZendeskCustomFieldOption(self.client, o) for o in self.get('custom_field_options')]
+
+    @property
+    def title(self) -> str:
+        return self.get('title')
+
+    @property
+    def type(self) -> str:
+        return self.get('type')
 
 
 class ZendeskUser(ZendeskApiObject):
@@ -111,10 +154,6 @@ class ZendeskUser(ZendeskApiObject):
     def external_id(self, value):
         response = self.client.update_user(self.id, {'external_id': value})
         self.update(response.get('user'))
-
-    @property
-    def id(self) -> int:
-        return self.get('id')
 
     @property
     def identities(self):
