@@ -1,0 +1,24 @@
+GET https://{{company}}.zendesk.com/api/v2/search.json?query=type:ticket+tags:tag-to-search-for
+Authorization: Basic {{email}} {{token}}
+
+###
+
+PUT https://{{company}}.zendesk.com/api/v2/tickets/update_many.json?ids=12345
+Authorization: Basic {{email}} {{token}}
+
+{
+  "ticket": {
+    "remove_tags": ["tag-to-remove"],
+    "additional_tags": ["tag-to-add"]
+  }
+}
+
+###
+
+GET https://{{company}}.zendesk.com/api/v2/ticket_fields.json
+Authorization: Basic {{email}} {{token}}
+
+###
+
+GET https://{{company}}.zendesk.com/api/v2/groups.json
+Authorization: Basic {{email}} {{token}}
