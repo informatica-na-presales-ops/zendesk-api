@@ -22,3 +22,8 @@ Authorization: Basic {{email}} {{token}}
 
 GET https://{{company}}.zendesk.com/api/v2/groups.json
 Authorization: Basic {{email}} {{token}}
+
+###
+
+GET https://{{company}}.zendesk.com/api/v2/search.json?sort_by=updated_at&sort_order=asc&query=type:ticket+status<solved+updated<2020-04-28
+Authorization: Basic {{email}} {{token}}
