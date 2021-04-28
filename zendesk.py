@@ -43,6 +43,19 @@ class ZendeskClient:
             _identities = data.get('identities')
             yield from [ZendeskUserIdentity(self, i) for i in _identities]
 
+    def search(self, query: str, sort_by: str = None, sort_order: str = 'desc'):
+        _url = f'{self.base_url}/search.json'
+        params = {
+            'query': query,
+            'sort_order': sort_order
+        }
+        if sort_by is not None:
+            params.update({
+                'sort_by': sort_by
+            })
+        data = self._get(_url, params)
+        return data
+
     def search_users(self, query: str):
         _url = f'{self.base_url}/users/search.json'
         params = {'query': query}
