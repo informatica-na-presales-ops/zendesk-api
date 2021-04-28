@@ -3,3 +3,4 @@ version: '3.8'
 services:
   zendesk-api:
     image: ghcr.io/informatica-na-presales-ops/zendesk-api
+    init: true
