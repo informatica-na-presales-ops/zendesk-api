@@ -1,4 +1,6 @@
 .idea
+.venv
+.vscode
 __pycache__
 docker-compose.override.yaml
 http-client.private.env.json
