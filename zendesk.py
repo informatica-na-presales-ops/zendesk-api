@@ -2,8 +2,6 @@ import logging
 import requests
 import requests.auth
 
-from typing import Dict, List
-
 log = logging.getLogger(__name__)
 
 
@@ -21,7 +19,7 @@ class ZendeskClient:
         response.raise_for_status()
         return response.json()
 
-    def _put(self, url: str, json: Dict):
+    def _put(self, url: str, json: dict):
         log.debug(f'Putting {url} / {json}')
         response = self.s.put(url, json=json)
         response.raise_for_status()
@@ -42,6 +40,15 @@ class ZendeskClient:
             _url = data.get('next_page')
             _identities = data.get('identities')
             yield from [ZendeskUserIdentity(self, i) for i in _identities]
+
+    @property
+    def organizations(self):
+        _url = f'{self.base_url}/organizations.json'
+        while _url is not None:
+            data = self._get(_url)
+            _url = data.get('next_page')
+            _orgs = data.get('organizations')
+            yield from [ZendeskOrganization(self, i) for i in _orgs]
 
     def search(self, query: str, sort_by: str = None, sort_order: str = 'desc'):
         _url = f'{self.base_url}/search.json'
@@ -78,13 +85,19 @@ class ZendeskClient:
             _tickets = data.get('tickets')
             yield from [ZendeskTicket(self, i) for i in _tickets]
 
-    def update_ticket(self, ticket_id: int, params: Dict):
+    def update_organization(self, org_id: int, params: dict):
+        _url = f'{self.base_url}/organizations/{org_id}.json'
+        json = {'organization': params}
+        data = self._put(_url, json)
+        return data
+
+    def update_ticket(self, ticket_id: int, params: dict):
         _url = f'{self.base_url}/tickets/{ticket_id}.json'
         json = {'ticket': params}
         data = self._put(_url, json)
         return data
 
-    def update_user(self, user_id: int, params: Dict):
+    def update_user(self, user_id: int, params: dict):
         _url = f'{self.base_url}/users/{user_id}.json'
         json = {'user': params}
         data = self._put(_url, json)
@@ -136,9 +149,21 @@ class ZendeskCustomFieldOption(ZendeskApiObject):
         return self.get('value')
 
 
+class ZendeskOrganization(ZendeskApiObject):
+    @ property
+    def name(self) -> str:
+        return self.get('name')\
+
+    @name.setter
+    def name(self, value: str):
+        params = dict(name=value)
+        self.update(params)
+        self.client.update_organization(self.id, params)
+
+
 class ZendeskTicketField(ZendeskCustomField):
     @property
-    def options(self) -> List[ZendeskCustomFieldOption]:
+    def options(self) -> list[ZendeskCustomFieldOption]:
         return [ZendeskCustomFieldOption(self.client, o) for o in self.get('custom_field_options')]
 
     @property
@@ -156,7 +181,7 @@ class ZendeskUser(ZendeskApiObject):
         return self.get('email')
 
     @property
-    def emails(self) -> List[str]:
+    def emails(self) -> list[str]:
         return [i.value for i in self.identities if i.is_email]
 
     @property
@@ -164,7 +189,7 @@ class ZendeskUser(ZendeskApiObject):
         return self.get('external_id')
 
     @external_id.setter
-    def external_id(self, value):
+    def external_id(self, value: str):
         response = self.client.update_user(self.id, {'external_id': value})
         self.update(response.get('user'))
 
