@@ -1,4 +1,29 @@
+GET https://{{company}}.zendesk.com/api/v2/groups.json
+Authorization: Basic {{email}} {{token}}
+
+###
+
+GET https://{{company}}.zendesk.com/api/v2/incremental/tickets/cursor.json?start_time=946684800&per_page=1
+Authorization: Basic {{email}} {{token}}
+
+###
+
+GET https://{{company}}.zendesk.com/api/v2/organizations.json
+Authorization: Basic {{email}} {{token}}
+
+###
+
+GET https://{{company}}.zendesk.com/api/v2/search.json?sort_by=updated_at&sort_order=asc&query=type:ticket+status<solved+updated<2020-04-28
+Authorization: Basic {{email}} {{token}}
+
+###
+
 GET https://{{company}}.zendesk.com/api/v2/search.json?query=type:ticket+tags:tag-to-search-for
+Authorization: Basic {{email}} {{token}}
+
+###
+
+GET https://{{company}}.zendesk.com/api/v2/ticket_fields.json
 Authorization: Basic {{email}} {{token}}
 
 ###
@@ -12,23 +37,3 @@ Authorization: Basic {{email}} {{token}}
     "additional_tags": ["tag-to-add"]
   }
 }
-
-###
-
-GET https://{{company}}.zendesk.com/api/v2/ticket_fields.json
-Authorization: Basic {{email}} {{token}}
-
-###
-
-GET https://{{company}}.zendesk.com/api/v2/groups.json
-Authorization: Basic {{email}} {{token}}
-
-###
-
-GET https://{{company}}.zendesk.com/api/v2/search.json?sort_by=updated_at&sort_order=asc&query=type:ticket+status<solved+updated<2020-04-28
-Authorization: Basic {{email}} {{token}}
-
-###
-
-GET https://{{company}}.zendesk.com/api/v2/organizations.json
-Authorization: Basic {{email}} {{token}}
