@@ -25,6 +25,14 @@ class ZendeskClient:
         response.raise_for_status()
         return response.json()
 
+    def get_incremental_tickets(self, start_time: int):
+        _url = f'{self.base_url}/incremental/tickets/cursor.json'
+        params = {
+            'start_time': start_time
+        }
+        data = self._get(_url, params)
+        yield from [ZendeskTicket(self, t) for t in data.get('tickets', [])]
+
     def get_ticket_field_options(self, field_id: int):
         _url = f'{self.base_url}/ticket_fields/{field_id}/options.json'
         while _url is not None:
