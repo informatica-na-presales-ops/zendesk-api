@@ -130,6 +130,10 @@ class ZendeskApiObject(dict):
     def id(self) -> int:
         return self.get('id')
 
+    @property
+    def url(self) -> str:
+        return self.get('url')
+
 
 class ZendeskTicket(ZendeskApiObject):
     @property
