@@ -1,5 +1,7 @@
 FROM python:3.9.5-alpine3.13
 
+RUN /sbin/apk add --no-cache libpq
+
 COPY requirements.txt /zendesk-api/requirements.txt
 
 RUN /usr/local/bin/pip install --no-cache-dir --requirement /zendesk-api/requirements.txt
