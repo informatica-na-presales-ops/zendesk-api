@@ -1,3 +1,8 @@
+PUT https://{{company}}.zendesk.com/api/v2/deleted_tickets/114/restore.json
+Authorization: Basic {{email}} {{token}}
+
+###
+
 GET https://{{company}}.zendesk.com/api/v2/groups.json
 Authorization: Basic {{email}} {{token}}
 
@@ -24,6 +29,11 @@ Authorization: Basic {{email}} {{token}}
 ###
 
 GET https://{{company}}.zendesk.com/api/v2/ticket_fields.json
+Authorization: Basic {{email}} {{token}}
+
+###
+
+GET https://{{company}}.zendesk.com/api/v2/tickets/114.json
 Authorization: Basic {{email}} {{token}}
 
 ###
