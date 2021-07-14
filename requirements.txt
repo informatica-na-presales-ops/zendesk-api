@@ -8,7 +8,7 @@
 
 certifi==2021.5.30
     # via requests
-chardet==4.0.0
+charset-normalizer==2.0.1
     # via requests
 fort==1.0.1
     # via -r requirements.in
@@ -16,7 +16,7 @@ idna==2.10
     # via requests
 psycopg2==2.9.1
     # via -r requirements.in
-requests==2.25.1
+requests==2.26.0
     # via -r requirements.in
 urllib3==1.26.5
     # via requests
