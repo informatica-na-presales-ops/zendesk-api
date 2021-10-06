@@ -1,12 +1,21 @@
 FROM python:3.9.7-alpine3.14
 
 RUN /sbin/apk add --no-cache libpq
+RUN /usr/sbin/adduser -g python -D python
 
-COPY requirements.txt /zendesk-api/requirements.txt
+USER python
+RUN /usr/local/bin/python -m venv /home/python/venv
 
-RUN /usr/local/bin/pip install --no-cache-dir --requirement /zendesk-api/requirements.txt
+COPY --chown=python:python requirements.txt /home/python/zendesk-api/requirements.txt
+RUN /home/python/venv/bin/pip install --no-cache-dir --requirement /home/python/zendesk-api/requirements.txt
 
-COPY update-user-external-id.py /zendesk-api/update-user-external-id.py
-COPY zendesk.py /zendesk-api/zendesk.py
+ENV PATH="/home/python/venv/bin:${PATH}" \
+    PYTHONUNBUFFERED="1"
 
-ENTRYPOINT ["/usr/local/bin/python"]
+COPY --chown=python:python update-user-external-id.py /home/python/zendesk-api/update-user-external-id.py
+COPY --chown=python:python zendesk.py /home/python/zendesk-api/zendesk.py
+
+ENTRYPOINT ["/home/python/venv/bin/python"]
+
+LABEL org.opencontainers.image.authors="William Jackson <wjackson@informatica.com>" \
+      org.opencontainers.image.source="https://github.com/informatica-na-presales-ops/zendesk-api"
