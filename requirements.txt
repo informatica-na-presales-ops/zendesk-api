@@ -14,7 +14,7 @@ fort==1.0.1
     # via -r requirements.in
 idna==2.10
     # via requests
-psycopg2==2.9.2
+psycopg2==2.9.3
     # via -r requirements.in
 requests==2.26.0
     # via -r requirements.in
