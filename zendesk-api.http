@@ -33,6 +33,20 @@ Authorization: Basic {{email}} {{token}}
 
 ###
 
+POST https://{{company}}.zendesk.com/api/v2/tickets
+Authorization: Basic {{email}} {{token}}
+Content-Type: application/json
+
+{
+  "ticket": {
+    "comment": {
+      "body": "Test ticket"
+    }
+  }
+}
+
+###
+
 GET https://{{company}}.zendesk.com/api/v2/tickets/114.json
 Authorization: Basic {{email}} {{token}}
 
@@ -47,3 +61,27 @@ Authorization: Basic {{email}} {{token}}
     "additional_tags": ["tag-to-add"]
   }
 }
+
+###
+
+GET https://{{company}}.zendesk.com/api/v2/users.json
+Authorization: Basic {{email}} {{token}}
+
+###
+
+GET https://{{company}}.zendesk.com/api/v2/users/{{user_id}}.json
+Authorization: Basic {{email}} {{token}}
+
+###
+
+PUT https://{{company}}.zendesk.com/api/v2/users/{{user_id}}.json
+Authorization: Basic {{email}} {{token}}
+Content-Type: application/json
+
+{
+  "user": {
+    "external_id": null
+  }
+}
+
+###
