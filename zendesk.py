@@ -146,6 +146,17 @@ class ZendeskTicket(ZendeskApiObject):
         self.update(params)
         self.client.update_ticket(self.id, params)
 
+    def remove_email_cc(self, email: str):
+        params = {
+            'email_ccs': [
+                {
+                    'action': 'delete',
+                    'user_email': email,
+                }
+            ]
+        }
+        return self.client.update_ticket(self.id, params)
+
 
 class ZendeskCustomField(ZendeskApiObject):
     pass
