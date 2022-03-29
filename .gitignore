@@ -2,5 +2,5 @@
 .venv
 .vscode
 __pycache__
-docker-compose.override.yaml
+compose.override.yaml
 http-client.private.env.json
