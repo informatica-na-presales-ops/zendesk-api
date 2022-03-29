@@ -74,6 +74,11 @@ Authorization: Basic {{email}} {{token}}
 
 ###
 
+GET https://{{company}}.zendesk.com/api/v2/users/{{user_id}}/group_memberships.json
+Authorization: Basic {{email}} {{token}}
+
+###
+
 PUT https://{{company}}.zendesk.com/api/v2/users/{{user_id}}.json
 Authorization: Basic {{email}} {{token}}
 Content-Type: application/json
