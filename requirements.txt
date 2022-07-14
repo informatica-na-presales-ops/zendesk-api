@@ -10,7 +10,7 @@ certifi==2022.6.15
     # via requests
 charset-normalizer==2.1.0
     # via requests
-fort==1.0.1
+fort==1.1.1
     # via -r requirements.in
 idna==3.3
     # via requests
