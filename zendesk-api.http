@@ -1,4 +1,4 @@
-PUT https://{{company}}.zendesk.com/api/v2/deleted_tickets/114/restore.json
+PUT https://{{company}}.zendesk.com/api/v2/deleted_tickets/{{ticket_id}}/restore.json
 Authorization: Basic {{email}} {{token}}
 
 ###
@@ -33,6 +33,11 @@ Authorization: Basic {{email}} {{token}}
 
 ###
 
+GET https://{{company}}.zendesk.com/api/v2/ticket_fields/{{ticket_field_id}}/options.json
+Authorization: Basic {{email}} {{token}}
+
+###
+
 POST https://{{company}}.zendesk.com/api/v2/tickets
 Authorization: Basic {{email}} {{token}}
 Content-Type: application/json
@@ -47,12 +52,12 @@ Content-Type: application/json
 
 ###
 
-GET https://{{company}}.zendesk.com/api/v2/tickets/114.json
+GET https://{{company}}.zendesk.com/api/v2/tickets/{{ticket_id}}.json
 Authorization: Basic {{email}} {{token}}
 
 ###
 
-PUT https://{{company}}.zendesk.com/api/v2/tickets/update_many.json?ids=12345
+PUT https://{{company}}.zendesk.com/api/v2/tickets/update_many.json?ids={{ticket_id}}
 Authorization: Basic {{email}} {{token}}
 
 {
