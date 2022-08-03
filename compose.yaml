@@ -1,4 +1,13 @@
 services:
+  shell:
+    entrypoint:
+      - /bin/sh
+    image: ghcr.io/informatica-na-presales-ops/zendesk-api
+    init: true
+    volumes:
+      - ./:/home/python/zendesk-api
+    working_dir: /home/python/zendesk-api
+
   zendesk-api:
     image: ghcr.io/informatica-na-presales-ops/zendesk-api
     init: true
