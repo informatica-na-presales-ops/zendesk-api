@@ -33,6 +33,7 @@ def main():
         if tf.title == args.field_title:
             for option in tf.options:
                 tf_options.append({
+                    'id': option.id,
                     'name': option.name,
                     'value': option.value
                 })
@@ -41,7 +42,7 @@ def main():
     output_file = pathlib.Path(args.output_file).resolve()
     log.info(f'Writing to {output_file}')
     with output_file.open('w', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=['name', 'value'])
+        writer = csv.DictWriter(f, fieldnames=['id', 'name', 'value'])
         writer.writeheader()
         writer.writerows(tf_options)
 
