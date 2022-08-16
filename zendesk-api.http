@@ -38,6 +38,25 @@ Authorization: Basic {{email}} {{token}}
 
 ###
 
+POST https://{{company}}.zendesk.com/api/v2/ticket_fields/{{ticket_field_id}}/options.json
+Authorization: Basic {{email}} {{token}}
+Content-Type: application/json
+
+{
+  "custom_field_option": {
+    "id": {{ticket_field_option_id}},
+    "name": "New Product Name Renamed"
+  }
+}
+
+###
+
+DELETE https://{{company}}.zendesk.com/api/v2/ticket_fields/{{ticket_field_id}}/options/{{ticket_field_option_id}}.json
+Authorization: Basic {{email}} {{token}}
+
+
+###
+
 POST https://{{company}}.zendesk.com/api/v2/tickets
 Authorization: Basic {{email}} {{token}}
 Content-Type: application/json
