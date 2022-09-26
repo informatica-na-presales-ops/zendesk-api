@@ -10,6 +10,7 @@ COPY --chown=python:python requirements.txt /home/python/zendesk-api/requirement
 RUN /home/python/venv/bin/pip install --no-cache-dir --requirement /home/python/zendesk-api/requirements.txt
 
 ENV PATH="/home/python/venv/bin:${PATH}" \
+    PYTHONDONTWRITEBYTECODE="1" \
     PYTHONUNBUFFERED="1"
 
 COPY --chown=python:python update-user-external-id.py /home/python/zendesk-api/update-user-external-id.py
