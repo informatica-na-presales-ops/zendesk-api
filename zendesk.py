@@ -171,6 +171,10 @@ class ZendeskOrganizationMembership(ZendeskApiObject):
         return self.get('organization_id')
 
     @property
+    def organization_name(self) -> str:
+        return self.get('organization_name')
+
+    @property
     def user_id(self) -> int:
         return self.get('user_id')
 
