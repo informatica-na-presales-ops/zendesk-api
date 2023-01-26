@@ -173,7 +173,7 @@ class ZendeskCustomFieldOption(ZendeskApiObject):
 
 
 class ZendeskOrganization(ZendeskApiObject):
-    @ property
+    @property
     def name(self) -> str:
         return self.get('name')
 
