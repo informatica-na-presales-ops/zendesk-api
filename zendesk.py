@@ -50,6 +50,15 @@ class ZendeskClient:
             yield from [ZendeskUserIdentity(self, i) for i in _identities]
 
     @property
+    def organization_memberships(self):
+        _url = f'{self.base_url}/organization_memberships.json'
+        while _url is not None:
+            data = self._get(_url)
+            _url = data.get('next_page')
+            _memberships = data.get('organization_memberships')
+            yield from [ZendeskOrganizationMembership(self, i) for i in _memberships]
+
+    @property
     def organizations(self):
         _url = f'{self.base_url}/organizations.json'
         while _url is not None:
