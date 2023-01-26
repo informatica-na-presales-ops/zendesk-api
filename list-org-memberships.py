@@ -8,6 +8,6 @@ z = zendesk.ZendeskClient(os.getenv('ZENDESK_COMPANY'), os.getenv('ZENDESK_USERN
 
 users = {u.id: u for u in z.users}
 
-for m in z.organization_memberships:
+for i, m in enumerate(z.organization_memberships, start=1):
     u: zendesk.ZendeskUser = users.get(m.user_id)
-    log.info(f'{u.email} is a member of {m.organization_name}')
+    log.info(f'{i} {u.email} is a member of {m.organization_name}')
