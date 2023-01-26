@@ -11,6 +11,11 @@ on:
     types:
       - published
   workflow_dispatch:
+    inputs:
+      push_image:
+        description: Push latest image
+        required: true
+        type: boolean
 
 env:
   image_name: ghcr.io/informatica-na-presales-ops/zendesk-api
@@ -36,7 +41,7 @@ jobs:
           tags: ${{ env.image_name }}
 
       - name: Log in to GitHub container registry
-        if: github.event_name == 'push' || github.even_name == 'release'
+        if: github.event_name == 'push' || github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.push_image)
         uses: docker/login-action@v2.1.0
         with:
           password: ${{ github.token }}
@@ -44,7 +49,7 @@ jobs:
           username: ${{ github.actor }}
 
       - name: Push latest image to registry
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.push_image)
         run: docker image push ${{ env.image_name }}
 
       - name: Tag and push release image to registry
