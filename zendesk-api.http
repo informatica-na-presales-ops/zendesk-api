@@ -13,6 +13,11 @@ Authorization: Basic {{email}} {{token}}
 
 ###
 
+GET https://{{company}}.zendesk.com/api/v2/organization_memberships.json
+Authorization: Basic {{email}} {{token}}
+
+###
+
 GET https://{{company}}.zendesk.com/api/v2/organizations.json
 Authorization: Basic {{email}} {{token}}
 
