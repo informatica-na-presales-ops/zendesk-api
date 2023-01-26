@@ -52,11 +52,18 @@ class ZendeskClient:
     @property
     def organization_memberships(self):
         _url = f'{self.base_url}/organization_memberships.json'
-        while _url is not None:
-            data = self._get(_url)
-            _url = data.get('next_page')
+        params = {
+            'page[size]': 100,
+        }
+        has_more = True
+        while has_more:
+            data = self._get(_url, params)
             _memberships = data.get('organization_memberships')
             yield from [ZendeskOrganizationMembership(self, i) for i in _memberships]
+            has_more = data.get('meta').get('has_more')
+            params.update({
+                'page[after]': data.get('meta').get('after_cursor'),
+            })
 
     @property
     def organizations(self):
