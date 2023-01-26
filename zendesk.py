@@ -135,29 +135,6 @@ class ZendeskApiObject(dict):
         return self.get('url')
 
 
-class ZendeskTicket(ZendeskApiObject):
-    @property
-    def external_id(self) -> str:
-        return self.get('external_id')
-
-    @external_id.setter
-    def external_id(self, value: str):
-        params = dict(external_id=value)
-        self.update(params)
-        self.client.update_ticket(self.id, params)
-
-    def remove_email_cc(self, email: str):
-        params = {
-            'email_ccs': [
-                {
-                    'action': 'delete',
-                    'user_email': email,
-                }
-            ]
-        }
-        return self.client.update_ticket(self.id, params)
-
-
 class ZendeskCustomField(ZendeskApiObject):
     pass
 
@@ -182,6 +159,29 @@ class ZendeskOrganization(ZendeskApiObject):
         params = dict(name=value)
         self.update(params)
         self.client.update_organization(self.id, params)
+
+
+class ZendeskTicket(ZendeskApiObject):
+    @property
+    def external_id(self) -> str:
+        return self.get('external_id')
+
+    @external_id.setter
+    def external_id(self, value: str):
+        params = dict(external_id=value)
+        self.update(params)
+        self.client.update_ticket(self.id, params)
+
+    def remove_email_cc(self, email: str):
+        params = {
+            'email_ccs': [
+                {
+                    'action': 'delete',
+                    'user_email': email,
+                }
+            ]
+        }
+        return self.client.update_ticket(self.id, params)
 
 
 class ZendeskTicketField(ZendeskCustomField):
