@@ -161,6 +161,19 @@ class ZendeskOrganization(ZendeskApiObject):
         self.client.update_organization(self.id, params)
 
 
+class ZendeskOrganizationMembership(ZendeskApiObject):
+    @property
+    def default(self) -> bool:
+        return bool(self.get('default'))
+
+    @property
+    def organization_id(self) -> int:
+        return self.get('organization_id')
+
+    @property
+    def user_id(self) -> int:
+        return self.get('user_id')
+
 class ZendeskTicket(ZendeskApiObject):
     @property
     def external_id(self) -> str:
