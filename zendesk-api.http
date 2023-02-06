@@ -3,7 +3,7 @@ Authorization: Basic {{email}} {{token}}
 
 ###
 
-GET https://{{company}}.zendesk.com/api/v2/groups.json
+GET https://{{company}}.zendesk.com/api/v2/groups.json?page[size]=100
 Authorization: Basic {{email}} {{token}}
 
 ###
@@ -93,7 +93,7 @@ Authorization: Basic {{email}} {{token}}
 
 ###
 
-GET https://{{company}}.zendesk.com/api/v2/users.json
+GET https://{{company}}.zendesk.com/api/v2/users.json?page[size]=100
 Authorization: Basic {{email}} {{token}}
 
 ###
