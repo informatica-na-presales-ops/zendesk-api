@@ -1,3 +1,4 @@
+import datetime
 import logging
 import requests
 import requests.auth
@@ -8,6 +9,7 @@ log = logging.getLogger(__name__)
 
 
 class ZendeskClient:
+    _group_memberships = None
     _groups = None
     _organization_memberships = None
     _organizations = None
@@ -54,6 +56,16 @@ class ZendeskClient:
         }
         return self._post(url, json)
 
+    def get_group_by_id(self, group_id: int) -> Optional['ZendeskGroup']:
+        for group in self.groups:
+            if group.id == group_id:
+                return group
+
+    def get_group_by_name(self, group_name: str) -> Optional['ZendeskGroup']:
+        for group in self.groups:
+            if group.name == group_name:
+                return group
+
     def get_incremental_tickets(self, start_time: int):
         _url = f'{self.base_url}/incremental/tickets/cursor.json'
         params = {
@@ -86,6 +98,26 @@ class ZendeskClient:
                 return user
 
     @property
+    def group_memberships(self):
+        if self._group_memberships is None:
+            result = []
+            url = f'{self.base_url}/group_memberships.json'
+            params = {
+                'page[size]': 100,
+            }
+            has_more = True
+            while has_more:
+                data = self._get(url, params)
+                _memberships = data.get('group_memberships')
+                result.extend([ZendeskGroupMembership(self, i) for i in _memberships])
+                has_more = data.get('meta').get('has_more')
+                params.update({
+                    'page[after]': data.get('meta').get('after_cursor'),
+                })
+            self._group_memberships = result
+        return self._group_memberships
+
+    @property
     def groups(self):
         if self._groups is None:
             result = []
@@ -105,12 +137,22 @@ class ZendeskClient:
             self._groups = result
         return self._groups
 
+    def list_group_memberships_for_user(self, user_id: int):
+        for m in self.group_memberships:
+            if m.user_id == user_id:
+                yield m
+
+    def list_memberships_for_group(self, group_id: int):
+        for m in self.group_memberships:
+            if m.group_id == group_id:
+                yield m
+
     def list_memberships_for_org(self, organization_id: int):
         for m in self.organization_memberships:
             if m.organization_id == organization_id:
                 yield m
 
-    def list_memberships_for_user(self, user_id: int):
+    def list_org_memberships_for_user(self, user_id: int):
         for m in self.organization_memberships:
             if m.user_id == user_id:
                 yield m
@@ -292,6 +334,16 @@ class ZendeskGroup(ZendeskApiObject):
         return self.get('name')
 
 
+class ZendeskGroupMembership(ZendeskApiObject):
+    @property
+    def group_id(self):
+        return self.get('group_id')
+
+    @property
+    def user_id(self):
+        return self.get('user_id')
+
+
 class ZendeskOrganization(ZendeskApiObject):
     _memberships = None
 
@@ -375,10 +427,15 @@ class ZendeskTicketField(ZendeskCustomField):
 
 
 class ZendeskUser(ZendeskApiObject):
+    _groups = None
     _organizations = None
 
     def __str__(self):
         return self.name
+
+    @property
+    def active(self):
+        return self.get('active')
 
     def add_org_membership(self, org: ZendeskOrganization):
         self.client.create_organization_membership(self.id, org.id)
@@ -405,6 +462,13 @@ class ZendeskUser(ZendeskApiObject):
         yield from self.client.list_user_identities(self.id)
 
     @property
+    def last_login_at(self):
+        _str = self.get('last_login_at')
+        if _str is None:
+            return None
+        return datetime.datetime.strptime(_str, '%Y-%m-%dT%H:%M:%S%z')
+
+    @property
     def name(self) -> str:
         return self.get('name')
 
@@ -413,10 +477,19 @@ class ZendeskUser(ZendeskApiObject):
         return self.get('organization_id')
 
     @property
+    def groups(self) -> list[ZendeskGroup]:
+        if self._groups is None:
+            result = []
+            for m in self.client.list_group_memberships_for_user(self.id):
+                result.append(self.client.get_group_by_id(m.group_id))
+            self._groups = result
+        return self._groups
+
+    @property
     def organizations(self) -> list[ZendeskOrganization]:
         if self._organizations is None:
             result = []
-            for m in self.client.list_memberships_for_user(self.id):
+            for m in self.client.list_org_memberships_for_user(self.id):
                 result.append(self.client.get_organization_by_id(m.organization_id))
             self._organizations = result
         return self._organizations
@@ -428,6 +501,10 @@ class ZendeskUser(ZendeskApiObject):
     @property
     def role(self) -> str:
         return self.get('role')
+
+    @property
+    def shared(self):
+        return self.get('shared')
 
     @property
     def suspended(self) -> bool:
@@ -445,6 +522,10 @@ class ZendeskUser(ZendeskApiObject):
 
     def unassign_organization(self, org: ZendeskOrganization):
         self.client.unassign_organization(self.id, org.id)
+
+    @property
+    def verified(self):
+        return self.get('verified')
 
 
 class ZendeskUserIdentity(ZendeskApiObject):
