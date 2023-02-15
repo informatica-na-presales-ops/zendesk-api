@@ -3,6 +3,11 @@ Authorization: Basic {{email}} {{token}}
 
 ###
 
+GET https://{{company}}.zendesk.com/api/v2/group_memberships.json?page[size]=100
+Authorization: Basic {{email}} {{token}}
+
+###
+
 GET https://{{company}}.zendesk.com/api/v2/groups.json?page[size]=100
 Authorization: Basic {{email}} {{token}}
 
