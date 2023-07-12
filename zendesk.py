@@ -367,6 +367,10 @@ class ZendeskOrganization(ZendeskApiObject):
         self.client.update_organization(self.id, params)
 
     @property
+    def tags(self) -> list[str]:
+        return self.get('tags', [])
+
+    @property
     def users(self) -> list['ZendeskUser']:
         return [self.client.get_user_by_id(m.user_id) for m in self.memberships]
 
