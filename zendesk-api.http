@@ -23,7 +23,7 @@ Authorization: Basic {{email}} {{token}}
 
 ###
 
-GET https://{{company}}.zendesk.com/api/v2/organizations.json
+GET https://{{company}}.zendesk.com/api/v2/organizations.json?page[size]=100
 Authorization: Basic {{email}} {{token}}
 
 ###
