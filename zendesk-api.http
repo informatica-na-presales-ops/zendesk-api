@@ -64,18 +64,30 @@ Content-Type: application/json
 DELETE https://{{company}}.zendesk.com/api/v2/ticket_fields/{{ticket_field_id}}/options/{{ticket_field_option_id}}.json
 Authorization: Basic {{email}} {{token}}
 
+###
+
+GET https://{{company}}.zendesk.com/api/v2/tickets.json
+Authorization: Basic {{email}} {{token}}
 
 ###
 
-POST https://{{company}}.zendesk.com/api/v2/tickets
+POST https://{{company}}.zendesk.com/api/v2/tickets.json
 Authorization: Basic {{email}} {{token}}
 Content-Type: application/json
 
 {
   "ticket": {
     "comment": {
-      "body": "Test ticket"
-    }
+      "body": "Test ticket body"
+    },
+    "custom_fields": [
+      {"id": {{primary_product_field_id}}, "value": "na"},
+      {"id": {{service_type_field_id}}, "value": "service-type/demo-wrapper"},
+      {"id": {{sf_account_field_id}}, "value": "N/A"},
+      {"id": {{sf_opportunity_field_id}}, "value": "N/A"}
+    ],
+    "requester_id": {{requester_id}},
+    "subject": "Test ticket subject"
   }
 }
 
@@ -99,6 +111,11 @@ Authorization: Basic {{email}} {{token}}
 ###
 
 GET https://{{company}}.zendesk.com/api/v2/users.json?page[size]=100
+Authorization: Basic {{email}} {{token}}
+
+###
+
+GET https://{{company}}.zendesk.com/api/v2/users/search.json?query={{user_search_query}}
 Authorization: Basic {{email}} {{token}}
 
 ###
