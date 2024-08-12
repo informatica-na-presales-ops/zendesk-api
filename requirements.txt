@@ -20,5 +20,5 @@ psycopg2==2.9.9
     # via -r requirements.in
 requests==2.32.3
     # via -r requirements.in
-urllib3==1.26.14
+urllib3==2.2.2
     # via requests
