@@ -12,7 +12,7 @@ charset-normalizer==3.3.2
     # via requests
 fort==2024.2
     # via -r requirements.in
-idna==3.7
+idna==3.8
     # via requests
 notch==2023.1
     # via -r requirements.in
