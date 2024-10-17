@@ -16,7 +16,7 @@ idna==3.10
     # via requests
 notch==2023.1
     # via -r requirements.in
-psycopg2==2.9.9
+psycopg2==2.9.10
     # via -r requirements.in
 requests==2.32.3
     # via -r requirements.in
