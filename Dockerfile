@@ -1,7 +1,6 @@
-FROM python:3.12-alpine
+FROM python:3.12-slim
 
-RUN /sbin/apk add --no-cache libpq
-RUN /usr/sbin/adduser -g python -D python
+RUN /usr/sbin/useradd --create-home --shell /bin/bash --user-group python
 
 USER python
 RUN /usr/local/bin/python -m venv /home/python/venv
