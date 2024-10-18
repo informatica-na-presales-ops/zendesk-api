@@ -4,8 +4,6 @@
 #
 #    pip-compile
 #
---extra-index-url https://alpine-wheels.github.io/index
-
 certifi==2024.8.30
     # via requests
 charset-normalizer==3.4.0
