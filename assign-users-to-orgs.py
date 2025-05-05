@@ -1,9 +1,11 @@
 import csv
+import logging
 import notch
 import os
 import zendesk
 
-log = notch.make_log('zendesk_api.assign_users_to_orgs')
+notch.configure()
+log = logging.getLogger(__name__)
 
 z = zendesk.ZendeskClient(os.getenv('ZENDESK_COMPANY'), os.getenv('ZENDESK_USERNAME'), os.getenv('ZENDESK_PASSWORD'))
 

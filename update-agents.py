@@ -2,7 +2,7 @@ import notch
 import os
 import zendesk
 
-log = notch.make_log('update-agents')
+notch.configure()
 
 company = os.getenv('ZENDESK_COMPANY')
 username = os.getenv('ZENDESK_USERNAME')
