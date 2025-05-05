@@ -1,9 +1,11 @@
 import argparse
+import logging
 import notch
 import settings
 import zendesk
 
-log = notch.make_log('zendesk_api.clean_email_ccs')
+notch.configure()
+log = logging.getLogger(__name__)
 
 
 def parse_args():

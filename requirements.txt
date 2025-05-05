@@ -12,7 +12,7 @@ fort==2025.0
     # via -r requirements.in
 idna==3.10
     # via requests
-notch==2023.1
+notch==2025.2
     # via -r requirements.in
 psycopg2-binary==2.9.10
     # via -r requirements.in
