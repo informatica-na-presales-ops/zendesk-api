@@ -1,0 +1,12 @@
+[project]
+name = "zendesk-api"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fort>=2025.0",
+    "notch>=2025.2",
+    "psycopg2-binary>=2.9.10",
+    "requests>=2.32.3",
+]
