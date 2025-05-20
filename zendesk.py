@@ -90,6 +90,12 @@ class ZendeskClient:
                 return org
         return None
 
+    def get_ticket_comments(self, ticket: "ZendeskTicket"):
+        _url = f"{self.base_url}/tickets/{ticket.id}/comments.json"
+        return [
+            ZendeskTicketComment(ticket, c) for c in self._get(_url).get("comments", [])
+        ]
+
     def get_ticket_field_options(self, field_id: int):
         _url = f"{self.base_url}/ticket_fields/{field_id}/options.json"
         while _url is not None:
@@ -223,13 +229,34 @@ class ZendeskClient:
             self._organizations = result
         return self._organizations
 
-    def search(self, query: str, sort_by: str = None, sort_order: str = "desc"):
+    def search(
+        self,
+        query: str,
+        sort_by: str = None,
+        sort_order: str = "desc",
+        include: str = None,
+        page: int = 1,
+    ):
         _url = f"{self.base_url}/search.json"
-        params = {"query": query, "sort_order": sort_order}
+        params = {"page": page, "query": query, "sort_order": sort_order}
         if sort_by is not None:
             params.update({"sort_by": sort_by})
+        if include is not None:
+            params.update({"include": include})
         data = self._get(_url, params)
         return data
+
+    def search_tickets(self, query: str, sort_by: str = None, sort_order: str = "desc"):
+        _query = f"type:ticket {query}"
+        page = 0
+        more = True
+        while more:
+            page += 1
+            data = self.search(_query, sort_by, sort_order, page=page)
+            for t in data.get("results"):
+                yield ZendeskTicket(self, t)
+            if data.get("next_page") is None:
+                more = False
 
     def search_users(self, query: str):
         _url = f"{self.base_url}/users/search.json"
@@ -409,6 +436,14 @@ class ZendeskOrganizationMembership(ZendeskApiObject):
 
 class ZendeskTicket(ZendeskApiObject):
     @property
+    def comments(self) -> list["ZendeskTicketComment"]:
+        return self.client.get_ticket_comments(self)
+
+    @property
+    def created_at(self) -> datetime.datetime:
+        return datetime.datetime.fromisoformat(self.get("created_at"))
+
+    @property
     def external_id(self) -> str:
         return self.get("external_id")
 
@@ -417,6 +452,10 @@ class ZendeskTicket(ZendeskApiObject):
         params = dict(external_id=value)
         self.update(params)
         self.client.update_ticket(self.id, params)
+
+    @property
+    def subject(self) -> str:
+        return self.get("subject")
 
     def remove_email_cc(self, email: str):
         params = {
@@ -428,6 +467,16 @@ class ZendeskTicket(ZendeskApiObject):
             ]
         }
         return self.client.update_ticket(self.id, params)
+
+
+class ZendeskTicketComment(ZendeskApiObject):
+    def __init__(self, ticket: ZendeskTicket, *args, **kwargs):
+        self.ticket = ticket
+        super().__init__(ticket.client, *args, **kwargs)
+
+    @property
+    def html_body(self) -> str:
+        return self.get("html_body")
 
 
 class ZendeskTicketField(ZendeskCustomField):
