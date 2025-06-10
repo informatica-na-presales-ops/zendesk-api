@@ -16,7 +16,7 @@ notch==2025.2
     # via -r requirements.in
 psycopg2-binary==2.9.10
     # via -r requirements.in
-requests==2.32.3
+requests==2.32.4
     # via -r requirements.in
 urllib3==2.4.0
     # via requests
