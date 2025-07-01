@@ -1,21 +1,11 @@
 services:
-  pip-compile:
-    entrypoint:
-      - /home/python/venv/bin/pip-compile
-    image: ghcr.io/williamjacksn/pip-tools:py3.13
-    init: true
-    volumes:
-      - ./:/home/python/zendesk-api
-    working_dir: /home/python/zendesk-api
-
   shell:
     entrypoint:
       - /bin/bash
     image: ghcr.io/informatica-na-presales-ops/zendesk-api
     init: true
     volumes:
-      - ./:/home/python/zendesk-api
-    working_dir: /home/python/zendesk-api
+      - ./:/app
 
   zendesk-api:
     image: ghcr.io/informatica-na-presales-ops/zendesk-api
